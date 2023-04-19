@@ -26,4 +26,6 @@ public class Product {
 
     @Column(length = 10000)
     private String description;
+
+    private String productImage;
 }
