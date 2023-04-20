@@ -6,4 +6,9 @@ public interface ProductService {
 
     ProductDto addNewProduct(ProductDto productDto);
 
+    ProductDto updateProduct(ProductDto productDto, Integer productId);
+
+    void deleteProduct(Integer productId);
+
+
 }
