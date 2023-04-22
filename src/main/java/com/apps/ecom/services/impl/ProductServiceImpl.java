@@ -9,6 +9,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -41,5 +44,18 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Integer productId) {
         Product product = this.productRepo.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product", "productId", productId));
         this.productRepo.delete(product);
+    }
+
+    @Override
+    public List<ProductDto> getAllProducts() {
+        List<Product> allProducts = this.productRepo.findAll();
+        List<ProductDto> productDtos = allProducts.stream().map((product) -> this.modelMapper.map(product, ProductDto.class)).collect(Collectors.toList());
+        return productDtos;
+    }
+
+    @Override
+    public ProductDto getSingleProduct(Integer productId) {
+        Product product = this.productRepo.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product", "productId", productId));
+        return this.modelMapper.map(product, ProductDto.class);
     }
 }

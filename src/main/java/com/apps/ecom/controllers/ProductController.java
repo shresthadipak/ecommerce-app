@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -73,6 +74,18 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable Integer productId){
         this.productService.deleteProduct(productId);
         return new ResponseEntity<ApiResponse>(new ApiResponse("Product deleted successfully !!", true), HttpStatus.OK);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<ProductDto>> getAllProducts(){
+        List<ProductDto> productDto = this.productService.getAllProducts();
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDto> getSingleProduct(@PathVariable Integer productId){
+        ProductDto productDto = this.productService.getSingleProduct(productId);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
 }
