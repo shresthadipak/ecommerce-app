@@ -1,20 +1,17 @@
 package com.apps.ecom.exceptions;
 
 import com.apps.ecom.payloads.ApiResponse;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.multipart.MultipartException;
 
-import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,7 +25,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) throws IOException {
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
         Map<String, String> resp = new HashMap<>();
         ex.getConstraintViolations().forEach((error)->{
             String fieldName = ((PathImpl) error.getPropertyPath()).getLeafNode().getName();
@@ -36,6 +33,12 @@ public class GlobalExceptionHandler {
             resp.put(fieldName, message);
         });
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SizeLimitExceededException.class)
+    public ResponseEntity<ApiResponse> handleSizeLimitExceededException(SizeLimitExceededException ex){
+        ApiResponse message = new ApiResponse("File uploaded exceed limit 10MB", false);
+        return new ResponseEntity<>(message, HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
     }
 
 }
