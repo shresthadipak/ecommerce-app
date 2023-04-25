@@ -28,4 +28,8 @@ public class Product {
     private String description;
 
     private String productImage;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

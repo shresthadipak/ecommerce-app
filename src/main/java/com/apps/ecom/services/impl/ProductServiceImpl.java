@@ -1,15 +1,25 @@
 package com.apps.ecom.services.impl;
 
+import com.apps.ecom.entities.Category;
 import com.apps.ecom.entities.Product;
 import com.apps.ecom.exceptions.ResourceNotFoundException;
 import com.apps.ecom.payloads.ProductDto;
+import com.apps.ecom.repositories.CategoryRepo;
 import com.apps.ecom.repositories.ProductRepo;
 import com.apps.ecom.services.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,9 +31,17 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private CategoryRepo categoryRepo;
+
     @Override
-    public ProductDto addNewProduct(ProductDto productDto) {
+    public ProductDto addNewProduct(String productDetails, String image, Integer categoryId) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductDto productDto = objectMapper.readValue(productDetails, ProductDto.class);
+        Category category = this.categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category", "categoryId", categoryId));
         Product product = this.modelMapper.map(productDto, Product.class);
+        product.setCategory(category);
+        product.setProductImage(image);
         Product newProduct = this.productRepo.save(product);
         return this.modelMapper.map(newProduct, ProductDto.class);
     }
