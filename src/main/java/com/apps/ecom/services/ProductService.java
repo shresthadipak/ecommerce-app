@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ProductService {
 
-    ProductDto addNewProduct(String productDto, String image, Integer categoryId) throws JsonProcessingException;
+    ProductDto addNewProduct(ProductDto productDto, Integer categoryId);
 
-    ProductDto updateProduct(ProductDto productDto, Integer productId);
+    ProductDto updateProduct(ProductDto productDto, Integer categoryId, Integer productId);
 
     void deleteProduct(Integer productId);
 

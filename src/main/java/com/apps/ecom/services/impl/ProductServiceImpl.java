@@ -35,25 +35,24 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepo categoryRepo;
 
     @Override
-    public ProductDto addNewProduct(String productDetails, String image, Integer categoryId) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ProductDto productDto = objectMapper.readValue(productDetails, ProductDto.class);
+    public ProductDto addNewProduct(ProductDto productDto, Integer categoryId){
         Category category = this.categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category", "categoryId", categoryId));
         Product product = this.modelMapper.map(productDto, Product.class);
         product.setCategory(category);
-        product.setProductImage(image);
         Product newProduct = this.productRepo.save(product);
         return this.modelMapper.map(newProduct, ProductDto.class);
     }
 
     @Override
-    public ProductDto updateProduct(ProductDto productDto, Integer productId) {
+    public ProductDto updateProduct(ProductDto productDto, Integer categoryId, Integer productId) {
         Product product = this.productRepo.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product", "productId", productId));
+        Category category = this.categoryRepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category", "categoryId", categoryId));
         product.setTitle(productDto.getTitle());
         product.setPrice(productDto.getPrice());
         product.setQuantity(productDto.getQuantity());
         product.setDescription(productDto.getDescription());
         product.setProductImage(productDto.getProductImage());
+        product.setCategory(category);
         Product updateProduct = this.productRepo.save(product);
         return this.modelMapper.map(updateProduct, ProductDto.class);
     }
