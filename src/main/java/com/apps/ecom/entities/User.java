@@ -32,6 +32,9 @@ public class User implements UserDetails {
 
     private String about;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Wishlist> wishlists = new ArrayList<>();
+
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user", referencedColumnName = "id"),

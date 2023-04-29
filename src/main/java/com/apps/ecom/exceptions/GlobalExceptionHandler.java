@@ -62,4 +62,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(ProductIsExistException.class)
+    public  ResponseEntity<ApiResponse> productIsExistException(ProductIsExistException ex){
+        String message = ex.getMessage();
+        ApiResponse apiResponse = new ApiResponse(message, false);
+        return  new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.FORBIDDEN);
+    }
+
 }
