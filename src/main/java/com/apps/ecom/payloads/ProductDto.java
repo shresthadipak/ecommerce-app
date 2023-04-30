@@ -24,7 +24,7 @@ public class ProductDto {
 
 
     @Min(value = 1)
-    private Long price;
+    private Double price;
 
     @NotBlank
     @Size(min=10, max=1000)

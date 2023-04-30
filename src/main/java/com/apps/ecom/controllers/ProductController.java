@@ -44,7 +44,7 @@ public class ProductController {
     public ResponseEntity<ProductDto> addNewProduct(
             @RequestParam("title") @NotBlank @Size(min=3, max=50) String title,
             @RequestParam("quantity") @Min(value = 1) Integer quantity,
-            @RequestParam("price") @Min(value = 1) Long price,
+            @RequestParam("price") @Min(value = 1) Double price,
             @RequestParam("description")  @NotBlank @Size(min=10, max=1000) String description,
             @RequestParam("image") @ValidImage MultipartFile image,
             @RequestParam("categoryId")  Integer categoryId
@@ -64,7 +64,7 @@ public class ProductController {
     public ResponseEntity<ProductDto> updateProduct(
             @RequestParam("title") @NotBlank @Size(min=3, max = 50) String title,
             @RequestParam("quantity") @Min(value = 1)  Integer quantity,
-            @RequestParam("price") @Min(value = 1) Long price,
+            @RequestParam("price") @Min(value = 1) Double price,
             @RequestParam("description") @NotBlank @Size(min=10, max=1000) String description,
             @RequestParam("image") @ValidImage MultipartFile image,
             @RequestParam("categoryId") Integer categoryId,

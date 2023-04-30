@@ -25,7 +25,7 @@ public class Product {
 
     private Integer quantity;
 
-    private Long price;
+    private Double price;
 
     @Column(length = 10000)
     private String description;
@@ -38,5 +38,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Wishlist> wishlists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cart> carts = new ArrayList<>();
 
 }
