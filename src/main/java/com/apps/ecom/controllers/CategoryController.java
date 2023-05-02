@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.apps.ecom.config.AppConstants.CROSS_ORIGIN_BASE_URL;
 
-@CrossOrigin(CROSS_ORIGIN_BASE_URL)
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {

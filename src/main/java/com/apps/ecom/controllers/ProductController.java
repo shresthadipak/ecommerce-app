@@ -17,15 +17,14 @@ import org.springframework.util.StreamUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 
-import static com.apps.ecom.config.AppConstants.CROSS_ORIGIN_BASE_URL;
 
-@CrossOrigin(CROSS_ORIGIN_BASE_URL)
 @RestController
 @RequestMapping("/api/products")
 @Validated
