@@ -1,6 +1,7 @@
 package com.apps.ecom.exceptions;
 
 import com.apps.ecom.payloads.ApiResponse;
+import jakarta.persistence.ElementCollection;
 import jakarta.validation.ConstraintViolationException;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -67,6 +68,13 @@ public class GlobalExceptionHandler {
         String message = ex.getMessage();
         ApiResponse apiResponse = new ApiResponse(message, false);
         return  new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(LimitExceedException.class)
+    public ResponseEntity<ApiResponse> limitExceedExceptionHandler(LimitExceedException ex){
+        String message = ex.getMessage();
+        ApiResponse apiResponse = new ApiResponse(message, false);
+        return  new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.INSUFFICIENT_STORAGE);
     }
 
 }

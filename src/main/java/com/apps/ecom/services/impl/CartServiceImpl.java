@@ -3,6 +3,7 @@ package com.apps.ecom.services.impl;
 import com.apps.ecom.entities.Cart;
 import com.apps.ecom.entities.Product;
 import com.apps.ecom.entities.User;
+import com.apps.ecom.exceptions.LimitExceedException;
 import com.apps.ecom.exceptions.ProductIsExistException;
 import com.apps.ecom.exceptions.ResourceNotFoundException;
 import com.apps.ecom.payloads.CartDto;
@@ -38,12 +39,22 @@ public class CartServiceImpl implements CartService {
         User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "userId", userId));
         Product product = this.productRepo.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product", "productId", productId));
         Double netAmount = product.getPrice() * quantity;
-        Cart isProductExist = this.cartRepo.findByUserAndProduct(user, product);
 
-        if(isProductExist != null){
-            this.cartRepo.delete(isProductExist);
+        // exception throw when limit quantity exceeded
+        if(quantity > product.getQuantity()){
+            throw new LimitExceedException(product.getQuantity());
         }
 
+        // check product exist in cart
+        Cart isProductExist = this.cartRepo.findByUserAndProduct(user, product);
+        if(isProductExist != null){
+            isProductExist.setQuantity(quantity);
+            isProductExist.setNetAmount(netAmount);
+            Cart updateCart = this.cartRepo.save(isProductExist);
+            return this.modelMapper.map(updateCart, CartDto.class);
+        }
+
+        // New product added to cart
         Cart cart = new Cart();
         cart.setUser(user);
         cart.setProduct(product);
