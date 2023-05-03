@@ -7,6 +7,7 @@ import com.apps.ecom.repositories.CategoryRepo;
 import com.apps.ecom.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAllCategories() {
-        List<Category> allCategories = this.categoryRepo.findAll();
+        List<Category> allCategories = this.categoryRepo.findAll(Sort.by(Sort.Direction.DESC, "categoryId"));
         List<CategoryDto> categoryDtos = allCategories.stream().map((category)-> this.modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
         return categoryDtos;
     }

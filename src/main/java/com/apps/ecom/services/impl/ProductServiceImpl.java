@@ -15,6 +15,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> getAllProducts() {
-        List<Product> allProducts = this.productRepo.findAll();
+        List<Product> allProducts = this.productRepo.findAll(Sort.by(Sort.Direction.DESC, "productId"));
         List<ProductDto> productDtos = allProducts.stream().map((product) -> this.modelMapper.map(product, ProductDto.class)).collect(Collectors.toList());
         return productDtos;
     }
