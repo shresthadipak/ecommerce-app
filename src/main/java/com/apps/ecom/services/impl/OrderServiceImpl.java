@@ -3,12 +3,15 @@ package com.apps.ecom.services.impl;
 
 import com.apps.ecom.entities.Cart;
 import com.apps.ecom.entities.Order;
+import com.apps.ecom.entities.Product;
 import com.apps.ecom.entities.User;
 import com.apps.ecom.exceptions.ResourceNotFoundException;
 import com.apps.ecom.payloads.CartDto;
 import com.apps.ecom.payloads.OrderDto;
+import com.apps.ecom.payloads.ProductDto;
 import com.apps.ecom.repositories.CartRepo;
 import com.apps.ecom.repositories.OrderRepo;
+import com.apps.ecom.repositories.ProductRepo;
 import com.apps.ecom.repositories.UserRepo;
 import com.apps.ecom.services.OrderService;
 import org.modelmapper.ModelMapper;
@@ -35,6 +38,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private ProductRepo productRepo;
+
 
     @Override
     public List<OrderDto> createOrder(List<CartDto> cartDto, Integer userId, Integer paymentMethod) {
@@ -53,6 +59,12 @@ public class OrderServiceImpl implements OrderService {
             }else{
                 orderDto.setStatus(1);
             }
+
+            // stock management for products when place the order
+            ProductDto productDto = cartDto1.getProduct();
+            Product product = this.modelMapper.map(productDto, Product.class);
+            product.setQuantity(product.getQuantity() - cartDto1.getQuantity());
+            this.productRepo.save(product);
 
             // save to order table
             Order order = this.modelMapper.map(orderDto, Order.class);
